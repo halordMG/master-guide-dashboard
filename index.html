@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#003366">
   <title>Master Guide & SDA — Profile Dashboard</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -775,6 +778,22 @@
       .stats-grid { grid-template-columns: repeat(2, 1fr); }
       .charts-row { grid-template-columns: 1fr; }
     }
+    @media (max-width: 1024px) {
+      :root { --sidebar-width: 220px; }
+      .sidebar { width: var(--sidebar-width); }
+      .main-content { margin-left: var(--sidebar-width); }
+      .nav-menu a { padding: 10px 14px; font-size: 0.88rem; }
+      .content { padding: 20px; }
+      .calendar-wrap { grid-template-columns: 1fr; }
+      .calendar-sidebar { flex-direction: row; overflow-x: auto; gap: 12px; }
+      .calendar-sidebar-card { min-width: 280px; flex: 1; }
+      .members-header { flex-direction: column; align-items: stretch; gap: 12px; }
+      .members-actions { justify-content: stretch; flex-wrap: wrap; }
+      .members-actions .btn { flex: 1; justify-content: center; min-width: 140px; }
+      .form-row, .form-row.three { grid-template-columns: 1fr 1fr; }
+      .form-row.three { grid-template-columns: repeat(3, 1fr); }
+      .modal.wide { max-width: 90vw; }
+    }
     @media (max-width: 768px) {
       .sidebar { transform: translateX(-100%); }
       .sidebar.open { transform: translateX(0); }
@@ -787,6 +806,16 @@
       .members-actions .btn { flex: 1; justify-content: center; }
       .form-row, .form-row.three { grid-template-columns: 1fr; }
       .perm-grid { grid-template-columns: 1fr; }
+      .modal { margin: 8px; max-width: calc(100vw - 16px) !important; }
+      .modal.wide { max-width: calc(100vw - 16px) !important; }
+      .modal-body { padding: 16px; }
+      .modal-header { padding: 16px 20px; }
+      .calendar-wrap { grid-template-columns: 1fr; }
+      .calendar-sidebar { flex-direction: column; }
+      .calendar-sidebar-card { min-width: auto; }
+      .profile-view-body { grid-template-columns: 1fr; }
+      .profile-info-grid { grid-template-columns: 1fr; }
+      .table-wrap { -webkit-overflow-scrolling: touch; }
     }
     @media (max-width: 480px) {
       .content { padding: 16px; }
@@ -810,6 +839,16 @@
       .msg-sidebar { width: 100%; flex-direction: row; overflow-x: auto; }
       #loginQRCode img, #loginQRCode canvas { width: 100px !important; height: 100px !important; }
       .profile-photo-large { width: 100px; height: 100px; font-size: 1.8rem; }
+      .stats-grid { grid-template-columns: 1fr; }
+      .member-info { gap: 8px; }
+      .member-avatar { width: 36px; height: 36px; font-size: 0.85rem; }
+      .member-name { font-size: 0.88rem; }
+      .event-list-item { padding: 10px 0; }
+      .modal-footer { flex-direction: column-reverse; gap: 8px; }
+      .modal-footer .btn { width: 100%; justify-content: center; }
+      .admin-tabs { gap: 2px; }
+      .admin-tab { padding: 10px 14px; font-size: 0.82rem; }
+      .settings-card { padding: 16px; }
     }
     @media (max-width: 360px) {
       .auth-card { padding: 16px 12px; }
@@ -1373,8 +1412,8 @@
                 <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 2px;">Manage and view all registered members</div>
               </div>
               <div class="members-actions">
-                <button class="btn btn-outline" onclick="exportMembersExcel()"><i class="fas fa-file-excel"></i> Export Excel</button>
-                <button class="btn btn-primary" onclick="openMemberModal()"><i class="fas fa-plus"></i> Add Member</button>
+                <button class="btn btn-outline" data-admin-only onclick="exportMembersExcel()"><i class="fas fa-file-excel"></i> Export Excel</button>
+                <button class="btn btn-primary" data-admin-only onclick="openMemberModal()"><i class="fas fa-plus"></i> Add Member</button>
               </div>
             </div>
             <div class="table-wrap">
@@ -1418,8 +1457,8 @@
                 <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 2px;">View and manage all registered members</div>
               </div>
               <div class="members-actions">
-                <button class="btn btn-outline" onclick="exportMembersExcel()"><i class="fas fa-file-excel"></i> Export Excel</button>
-                <button class="btn btn-primary" onclick="openMemberModal()"><i class="fas fa-plus"></i> Add Member</button>
+                <button class="btn btn-outline" data-admin-only onclick="exportMembersExcel()"><i class="fas fa-file-excel"></i> Export Excel</button>
+                <button class="btn btn-primary" data-admin-only onclick="openMemberModal()"><i class="fas fa-plus"></i> Add Member</button>
               </div>
             </div>
             <div class="table-wrap">
@@ -1459,7 +1498,7 @@
               <div class="calendar-header">
                 <div class="calendar-month-title" id="calendarMonthTitle">May 2026</div>
                 <div style="display:flex;gap:12px;align-items:center;">
-                  <button class="btn btn-primary" onclick="openEventModal()"><i class="fas fa-plus"></i> Add Event</button>
+                  <button class="btn btn-primary" data-admin-only onclick="openEventModal()"><i class="fas fa-plus"></i> Add Event</button>
                   <div class="calendar-nav">
                     <button class="calendar-nav-btn" onclick="changeMonth(-1)"><i class="fas fa-chevron-left"></i></button>
                     <button class="calendar-nav-btn" onclick="changeMonth(1)"><i class="fas fa-chevron-right"></i></button>
@@ -1504,7 +1543,7 @@
                 <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 2px;">PDFs, Word docs, certificates, and guidelines</div>
               </div>
               <div class="members-actions">
-                <button class="btn btn-primary" onclick="openFormModal()"><i class="fas fa-upload"></i> Upload Form</button>
+                <button class="btn btn-primary" data-admin-only onclick="openFormModal()"><i class="fas fa-upload"></i> Upload Form</button>
               </div>
             </div>
             <div class="table-wrap">
@@ -1550,9 +1589,9 @@
                   <option>Annual Report</option>
                   <option>Other</option>
                 </select>
-                <button class="btn btn-outline" onclick="exportReportsExcel()"><i class="fas fa-file-excel"></i> Export Excel</button>
+                <button class="btn btn-outline" data-admin-only onclick="exportReportsExcel()"><i class="fas fa-file-excel"></i> Export Excel</button>
                 <button class="btn btn-outline" onclick="printReports()"><i class="fas fa-print"></i> Print</button>
-                <button class="btn btn-primary" onclick="openReportModal()"><i class="fas fa-upload"></i> Upload Report</button>
+                <button class="btn btn-primary" data-admin-only onclick="openReportModal()"><i class="fas fa-upload"></i> Upload Report</button>
               </div>
             </div>
             <div class="table-wrap">
@@ -1577,7 +1616,7 @@
 
           <div class="messaging-wrap animate-in delay-2">
             <div class="msg-sidebar">
-              <button class="btn btn-primary" style="width:100%;" onclick="openComposeModal()"><i class="fas fa-pen"></i> Compose</button>
+              <button class="btn btn-primary" data-admin-only style="width:100%;" onclick="openComposeModal()"><i class="fas fa-pen"></i> Compose</button>
               <div class="msg-folder active" onclick="setMessageFolder('inbox', this)" id="folder-inbox">
                 <i class="fas fa-inbox"></i> Inbox
                 <span class="count" id="inboxCount">0</span>
@@ -1692,7 +1731,7 @@
                   <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 2px;">Manage administrators and staff accounts</div>
                 </div>
                 <div class="members-actions">
-                  <button class="btn btn-primary" onclick="openUserModal()"><i class="fas fa-plus"></i> Add User</button>
+                  <button class="btn btn-primary" data-admin-only onclick="openUserModal()"><i class="fas fa-plus"></i> Add User</button>
                 </div>
               </div>
               <div class="table-wrap">
@@ -1722,7 +1761,7 @@
                   <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 2px;">Manage conference districts and affiliated churches</div>
                 </div>
                 <div class="members-actions">
-                  <button class="btn btn-primary" onclick="openDistrictModal()"><i class="fas fa-plus"></i> Add District</button>
+                  <button class="btn btn-primary" data-admin-only onclick="openDistrictModal()"><i class="fas fa-plus"></i> Add District</button>
                 </div>
               </div>
               <div class="table-wrap">
@@ -1751,7 +1790,7 @@
                   <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 2px;">Define access levels and capabilities</div>
                 </div>
                 <div class="members-actions">
-                  <button class="btn btn-primary" onclick="openRoleModal()"><i class="fas fa-plus"></i> Add Role</button>
+                  <button class="btn btn-primary" data-admin-only onclick="openRoleModal()"><i class="fas fa-plus"></i> Add Role</button>
                 </div>
               </div>
               <div id="rolesContainer">
@@ -1784,7 +1823,7 @@
               <div class="settings-card-title"><i class="fas fa-database"></i> Full Database Export</div>
               <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 16px;">Export the entire database as a single JSON file, ready to upload to Firebase, MongoDB, or any cloud platform.</p>
               <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                <button class="btn btn-primary" onclick="exportFullDatabase()"><i class="fas fa-cloud-download-alt"></i> Export Full Database (JSON)</button>
+                <button class="btn btn-primary" data-admin-only onclick="exportFullDatabase()"><i class="fas fa-cloud-download-alt"></i> Export Full Database (JSON)</button>
               </div>
             </div>
 
@@ -1792,15 +1831,15 @@
               <div class="settings-card-title"><i class="fas fa-file-export"></i> Export by Collection</div>
               <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 16px;">Download individual collections in JSON or CSV format.</p>
               <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px;">
-                <button class="btn btn-outline" onclick="exportCollectionJSON('members')"><i class="fas fa-users"></i> Members (JSON)</button>
-                <button class="btn btn-outline" onclick="exportCollectionCSV('members')"><i class="fas fa-file-csv"></i> Members (CSV)</button>
-                <button class="btn btn-outline" onclick="exportCollectionJSON('events')"><i class="fas fa-calendar-alt"></i> Events (JSON)</button>
-                <button class="btn btn-outline" onclick="exportCollectionCSV('events')"><i class="fas fa-file-csv"></i> Events (CSV)</button>
-                <button class="btn btn-outline" onclick="exportCollectionJSON('forms')"><i class="fas fa-file-alt"></i> Forms (JSON)</button>
-                <button class="btn btn-outline" onclick="exportCollectionJSON('reports')"><i class="fas fa-chart-bar"></i> Reports (JSON)</button>
-                <button class="btn btn-outline" onclick="exportCollectionJSON('messages')"><i class="fas fa-envelope"></i> Messages (JSON)</button>
-                <button class="btn btn-outline" onclick="exportCollectionJSON('users')"><i class="fas fa-user-shield"></i> Users (JSON)</button>
-                <button class="btn btn-outline" onclick="exportCollectionCSV('users')"><i class="fas fa-file-csv"></i> Users (CSV)</button>
+                <button class="btn btn-outline" data-admin-only onclick="exportCollectionJSON('members')"><i class="fas fa-users"></i> Members (JSON)</button>
+                <button class="btn btn-outline" data-admin-only onclick="exportCollectionCSV('members')"><i class="fas fa-file-csv"></i> Members (CSV)</button>
+                <button class="btn btn-outline" data-admin-only onclick="exportCollectionJSON('events')"><i class="fas fa-calendar-alt"></i> Events (JSON)</button>
+                <button class="btn btn-outline" data-admin-only onclick="exportCollectionCSV('events')"><i class="fas fa-file-csv"></i> Events (CSV)</button>
+                <button class="btn btn-outline" data-admin-only onclick="exportCollectionJSON('forms')"><i class="fas fa-file-alt"></i> Forms (JSON)</button>
+                <button class="btn btn-outline" data-admin-only onclick="exportCollectionJSON('reports')"><i class="fas fa-chart-bar"></i> Reports (JSON)</button>
+                <button class="btn btn-outline" data-admin-only onclick="exportCollectionJSON('messages')"><i class="fas fa-envelope"></i> Messages (JSON)</button>
+                <button class="btn btn-outline" data-admin-only onclick="exportCollectionJSON('users')"><i class="fas fa-user-shield"></i> Users (JSON)</button>
+                <button class="btn btn-outline" data-admin-only onclick="exportCollectionCSV('users')"><i class="fas fa-file-csv"></i> Users (CSV)</button>
                 <button class="btn btn-outline" onclick="exportCollectionJSON('districts')"><i class="fas fa-map-marker-alt"></i> Districts (JSON)</button>
                 <button class="btn btn-outline" onclick="exportCollectionCSV('districts')"><i class="fas fa-file-csv"></i> Districts (CSV)</button>
                 <button class="btn btn-outline" onclick="exportCollectionJSON('roles')"><i class="fas fa-id-badge"></i> Roles (JSON)</button>
@@ -1967,7 +2006,7 @@
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary" onclick="closeMemberModal()">Cancel</button>
-        <button class="btn btn-primary" onclick="saveMember()"><i class="fas fa-save"></i> Save Member</button>
+        <button class="btn btn-primary" data-admin-only onclick="saveMember()"><i class="fas fa-save"></i> Save Member</button>
       </div>
     </div>
   </div>
@@ -1984,7 +2023,7 @@
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary" onclick="closeProfileModal()">Close</button>
-        <button class="btn btn-primary" id="profileEditBtn" onclick=""><i class="fas fa-pen"></i> Edit Profile</button>
+        <button class="btn btn-primary" id="profileEditBtn" data-admin-only onclick=""><i class="fas fa-pen"></i> Edit Profile</button>
       </div>
     </div>
   </div>
@@ -2045,8 +2084,8 @@
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary" onclick="closeEventModal()">Cancel</button>
-        <button class="btn btn-danger" id="eventDeleteBtn" style="display:none;" onclick="deleteEventFromModal()"><i class="fas fa-trash"></i> Delete</button>
-        <button class="btn btn-primary" onclick="saveEvent()"><i class="fas fa-save"></i> Save Event</button>
+        <button class="btn btn-danger" id="eventDeleteBtn" data-admin-only style="display:none;" onclick="deleteEventFromModal()"><i class="fas fa-trash"></i> Delete</button>
+        <button class="btn btn-primary" data-admin-only onclick="saveEvent()"><i class="fas fa-save"></i> Save Event</button>
       </div>
     </div>
   </div>
@@ -2095,8 +2134,8 @@
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary" onclick="closeFormModal()">Cancel</button>
-        <button class="btn btn-danger" id="docDeleteBtn" style="display:none;" onclick="deleteFormFromModal()"><i class="fas fa-trash"></i> Delete</button>
-        <button class="btn btn-primary" onclick="saveForm()"><i class="fas fa-save"></i> Save Form</button>
+        <button class="btn btn-danger" id="docDeleteBtn" data-admin-only style="display:none;" onclick="deleteFormFromModal()"><i class="fas fa-trash"></i> Delete</button>
+        <button class="btn btn-primary" data-admin-only onclick="saveForm()"><i class="fas fa-save"></i> Save Form</button>
       </div>
     </div>
   </div>
@@ -2148,8 +2187,8 @@
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary" onclick="closeReportModal()">Cancel</button>
-        <button class="btn btn-danger" id="reportDeleteBtn" style="display:none;" onclick="deleteReportFromModal()"><i class="fas fa-trash"></i> Delete</button>
-        <button class="btn btn-primary" onclick="saveReport()"><i class="fas fa-save"></i> Save Report</button>
+        <button class="btn btn-danger" id="reportDeleteBtn" data-admin-only style="display:none;" onclick="deleteReportFromModal()"><i class="fas fa-trash"></i> Delete</button>
+        <button class="btn btn-primary" data-admin-only onclick="saveReport()"><i class="fas fa-save"></i> Save Report</button>
       </div>
     </div>
   </div>
@@ -2175,7 +2214,7 @@
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary" onclick="closeMessageModal()">Close</button>
-        <button class="btn btn-danger" onclick="deleteMessageFromModal()"><i class="fas fa-trash"></i> Delete</button>
+        <button class="btn btn-danger" data-admin-only onclick="deleteMessageFromModal()"><i class="fas fa-trash"></i> Delete</button>
         <button class="btn btn-primary" id="messageReplyBtn" onclick="replyToMessage()"><i class="fas fa-reply"></i> Reply</button>
       </div>
     </div>
@@ -2272,7 +2311,7 @@
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary" onclick="closeUserModal()">Cancel</button>
-        <button class="btn btn-primary" onclick="saveUser()"><i class="fas fa-save"></i> Save User</button>
+        <button class="btn btn-primary" data-admin-only onclick="saveUser()"><i class="fas fa-save"></i> Save User</button>
       </div>
     </div>
   </div>
@@ -2306,7 +2345,7 @@
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary" onclick="closeDistrictModal()">Cancel</button>
-        <button class="btn btn-primary" onclick="saveDistrict()"><i class="fas fa-save"></i> Save District</button>
+        <button class="btn btn-primary" data-admin-only onclick="saveDistrict()"><i class="fas fa-save"></i> Save District</button>
       </div>
     </div>
   </div>
@@ -2344,7 +2383,7 @@
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary" onclick="closeRoleModal()">Cancel</button>
-        <button class="btn btn-primary" onclick="saveRole()"><i class="fas fa-save"></i> Save Role</button>
+        <button class="btn btn-primary" data-admin-only onclick="saveRole()"><i class="fas fa-save"></i> Save Role</button>
       </div>
     </div>
   </div>
@@ -2552,8 +2591,14 @@
       return role.permissions.includes(perm);
     }
 
+    function isAdmin() {
+      if (!currentSessionUser) return false;
+      return currentSessionUser.role === 'Master Guide Director';
+    }
+
     function applyRolePermissions() {
       if (!currentSessionUser) return;
+      const admin = isAdmin();
       const menuItems = document.querySelectorAll('.nav-menu li');
       const perms = {
         'members': 'view_members',
@@ -2573,6 +2618,10 @@
         } else {
           li.style.display = '';
         }
+      });
+      // Hide/show CRUD buttons based on admin status
+      document.querySelectorAll('[data-admin-only]').forEach(el => {
+        el.style.display = admin ? '' : 'none';
       });
     }
 
@@ -2939,9 +2988,9 @@
           <td>
             <div class="action-btns">
               <button class="action-btn" onclick="viewMember(${m.id})" title="View Profile"><i class="fas fa-eye"></i></button>
-              <button class="action-btn" onclick="editMember(${m.id})" title="Edit"><i class="fas fa-pen"></i></button>
+              ${isAdmin() ? `<button class="action-btn" onclick="editMember(${m.id})" title="Edit"><i class="fas fa-pen"></i></button>` : ''}
               <button class="action-btn" onclick="showQRCard(${m.id})" title="QR Card" style="color:var(--mg-gold);"><i class="fas fa-qrcode"></i></button>
-              <button class="action-btn delete" onclick="deleteMember(${m.id})" title="Delete"><i class="fas fa-trash"></i></button>
+              ${isAdmin() ? `<button class="action-btn delete" onclick="deleteMember(${m.id})" title="Delete"><i class="fas fa-trash"></i></button>` : ''}
             </div>
           </td>
         `;
@@ -3034,8 +3083,8 @@
           <td>${u.lastLogin || 'Never'}</td>
           <td>
             <div class="action-btns">
-              <button class="action-btn" onclick="editUser(${u.id})" title="Edit"><i class="fas fa-pen"></i></button>
-              <button class="action-btn delete" onclick="deleteUser(${u.id})" title="Delete"><i class="fas fa-trash"></i></button>
+              ${isAdmin() ? `<button class="action-btn" onclick="editUser(${u.id})" title="Edit"><i class="fas fa-pen"></i></button>` : ''}
+              ${isAdmin() ? `<button class="action-btn delete" onclick="deleteUser(${u.id})" title="Delete"><i class="fas fa-trash"></i></button>` : ''}
             </div>
           </td>
         `;
@@ -3056,6 +3105,7 @@
     }
 
     function openUserModal() {
+      if (!isAdmin()) { showToast('Admin access required.', 'error'); return; }
       editingUserId = null;
       document.getElementById('userModalTitle').textContent = 'Add User';
       document.getElementById('userFormName').value = '';
@@ -3073,6 +3123,7 @@
     }
 
     function editUser(id) {
+      if (!isAdmin()) { showToast('Admin access required.', 'error'); return; }
       const u = users.find(x => x.id === id);
       if (!u) return;
       editingUserId = id;
@@ -3089,6 +3140,7 @@
     }
 
     function saveUser() {
+      if (!isAdmin()) { showToast('Admin access required.', 'error'); return; }
       const name = document.getElementById('userFormName').value.trim();
       if (!name) { showToast('Please enter a name', 'error'); return; }
 
@@ -3129,6 +3181,7 @@
     }
 
     function deleteUser(id) {
+      if (!isAdmin()) { showToast('Admin access required.', 'error'); return; }
       if (!confirm('Are you sure you want to delete this user?')) return;
       const u = users.find(x => x.id === id);
       users = users.filter(x => x.id !== id);
@@ -3150,8 +3203,8 @@
           <td>${d.leader}</td>
           <td>
             <div class="action-btns">
-              <button class="action-btn" onclick="editDistrict(${d.id})" title="Edit"><i class="fas fa-pen"></i></button>
-              <button class="action-btn delete" onclick="deleteDistrict(${d.id})" title="Delete"><i class="fas fa-trash"></i></button>
+              ${isAdmin() ? `<button class="action-btn" onclick="editDistrict(${d.id})" title="Edit"><i class="fas fa-pen"></i></button>` : ''}
+              ${isAdmin() ? `<button class="action-btn delete" onclick="deleteDistrict(${d.id})" title="Delete"><i class="fas fa-trash"></i></button>` : ''}
             </div>
           </td>
         `;
@@ -3160,6 +3213,7 @@
     }
 
     function openDistrictModal() {
+      if (!isAdmin()) { showToast('Admin access required.', 'error'); return; }
       editingDistrictId = null;
       document.getElementById('districtModalTitle').textContent = 'Add District';
       document.getElementById('distFormName').value = '';
@@ -3174,6 +3228,7 @@
     }
 
     function editDistrict(id) {
+      if (!isAdmin()) { showToast('Admin access required.', 'error'); return; }
       const d = districts.find(x => x.id === id);
       if (!d) return;
       editingDistrictId = id;
@@ -3186,6 +3241,7 @@
     }
 
     function saveDistrict() {
+      if (!isAdmin()) { showToast('Admin access required.', 'error'); return; }
       const name = document.getElementById('distFormName').value.trim();
       if (!name) { showToast('Please enter a district name', 'error'); return; }
 
@@ -3214,6 +3270,7 @@
     }
 
     function deleteDistrict(id) {
+      if (!isAdmin()) { showToast('Admin access required.', 'error'); return; }
       const d = districts.find(x => x.id === id);
       const userCount = users.filter(u => u.district === d.name).length;
       let msg = 'Are you sure you want to delete "' + d.name + '"?';
@@ -3241,8 +3298,8 @@
               <div style="font-size:0.85rem; color:var(--text-secondary);">${r.description || 'No description'}</div>
             </div>
             <div class="action-btns">
-              <button class="action-btn" onclick="editRole(${r.id})" title="Edit"><i class="fas fa-pen"></i></button>
-              <button class="action-btn delete" onclick="deleteRole(${r.id})" title="Delete"><i class="fas fa-trash"></i></button>
+              ${isAdmin() ? `<button class="action-btn" onclick="editRole(${r.id})" title="Edit"><i class="fas fa-pen"></i></button>` : ''}
+              ${isAdmin() ? `<button class="action-btn delete" onclick="deleteRole(${r.id})" title="Delete"><i class="fas fa-trash"></i></button>` : ''}
             </div>
           </div>
           <div style="margin-top:14px; display:flex; flex-wrap:wrap; gap:8px;">
@@ -3254,6 +3311,7 @@
     }
 
     function openRoleModal() {
+      if (!isAdmin()) { showToast('Admin access required.', 'error'); return; }
       editingRoleId = null;
       document.getElementById('roleModalTitle').textContent = 'Add Role';
       document.getElementById('roleFormName').value = '';
@@ -3267,6 +3325,7 @@
     }
 
     function editRole(id) {
+      if (!isAdmin()) { showToast('Admin access required.', 'error'); return; }
       const r = roles.find(x => x.id === id);
       if (!r) return;
       editingRoleId = id;
@@ -3280,6 +3339,7 @@
     }
 
     function saveRole() {
+      if (!isAdmin()) { showToast('Admin access required.', 'error'); return; }
       const name = document.getElementById('roleFormName').value.trim();
       if (!name) { showToast('Please enter a role name', 'error'); return; }
 
@@ -3308,6 +3368,7 @@
     }
 
     function deleteRole(id) {
+      if (!isAdmin()) { showToast('Admin access required.', 'error'); return; }
       const r = roles.find(x => x.id === id);
       const userCount = users.filter(u => u.role === r.name).length;
       let msg = 'Delete role "' + r.name + '"?';
@@ -3321,6 +3382,7 @@
 
     // ========== GENERAL SETTINGS ==========
     function saveGeneralSettings() {
+      if (!isAdmin()) { showToast('Admin access required.', 'error'); return; }
       showToast('Organization settings saved!', 'success');
       logActivity('Harold Bumanlag', 'Updated organization settings', 'General', 'settings');
     }
@@ -3565,9 +3627,9 @@
           <td>
             <div class="action-btns">
               <button class="action-btn" onclick="viewMember(${m.id})" title="View Profile"><i class="fas fa-eye"></i></button>
-              <button class="action-btn" onclick="editMember(${m.id})" title="Edit"><i class="fas fa-pen"></i></button>
+              ${isAdmin() ? `<button class="action-btn" onclick="editMember(${m.id})" title="Edit"><i class="fas fa-pen"></i></button>` : ''}
               <button class="action-btn" onclick="showQRCard(${m.id})" title="QR Card" style="color:var(--mg-gold);"><i class="fas fa-qrcode"></i></button>
-              <button class="action-btn delete" onclick="deleteMember(${m.id})" title="Delete"><i class="fas fa-trash"></i></button>
+              ${isAdmin() ? `<button class="action-btn delete" onclick="deleteMember(${m.id})" title="Delete"><i class="fas fa-trash"></i></button>` : ''}
             </div>
           </td>
         `;
@@ -3591,6 +3653,7 @@
     }
 
     function openMemberModal() {
+      if (!isAdmin()) { showToast('Admin access required.', 'error'); return; }
       editingMemberId = null;
       document.getElementById('memberModalTitle').textContent = 'Add New Member';
       document.querySelectorAll('#memberModal .modal-body input:not([type="file"]), #memberModal .modal-body select').forEach(el => el.value = '');
@@ -3707,6 +3770,7 @@
     }
 
     function editMember(id) {
+      if (!isAdmin()) { showToast('Admin access required.', 'error'); return; }
       const m = members.find(x => x.id === id);
       if (!m) return;
       editingMemberId = id;
@@ -3735,6 +3799,7 @@
     }
 
     function saveMember() {
+      if (!isAdmin()) { showToast('Admin access required.', 'error'); return; }
       const name = document.getElementById('formName').value.trim();
       if (!name) { showToast('Please enter a name', 'error'); return; }
 
@@ -3815,6 +3880,7 @@
     }
 
     function deleteMember(id) {
+      if (!isAdmin()) { showToast('Admin access required.', 'error'); return; }
       if (!confirm('Are you sure you want to delete this member?')) return;
       const m = members.find(x => x.id === id);
       const idx = members.findIndex(x => x.id === id);
@@ -3937,8 +4003,8 @@
             <div class="event-list-meta">${dateStr} &middot; ${ev.time} &middot; ${ev.district}</div>
           </div>
           <div class="event-list-actions">
-            <button class="action-btn" onclick="event.stopPropagation(); editEvent(${ev.id})" title="Edit"><i class="fas fa-pen"></i></button>
-            <button class="action-btn delete" onclick="event.stopPropagation(); deleteEvent(${ev.id})" title="Delete"><i class="fas fa-trash"></i></button>
+            ${isAdmin() ? `<button class="action-btn" onclick="event.stopPropagation(); editEvent(${ev.id})" title="Edit"><i class="fas fa-pen"></i></button>` : ''}
+            ${isAdmin() ? `<button class="action-btn delete" onclick="event.stopPropagation(); deleteEvent(${ev.id})" title="Delete"><i class="fas fa-trash"></i></button>` : ''}
           </div>
         `;
         container.appendChild(item);
@@ -3946,6 +4012,7 @@
     }
 
     function openEventModal(preselectedDate) {
+      if (!isAdmin()) { showToast('Admin access required.', 'error'); return; }
       editingEventId = null;
       document.getElementById('eventModalTitle').textContent = 'Add Event';
       document.getElementById('eventFormTitle').value = '';
@@ -3976,6 +4043,7 @@
     }
 
     function editEvent(id) {
+      if (!isAdmin()) { showToast('Admin access required.', 'error'); return; }
       const ev = events.find(x => x.id === id);
       if (!ev) return;
       editingEventId = id;
@@ -3994,6 +4062,7 @@
     }
 
     function saveEvent() {
+      if (!isAdmin()) { showToast('Admin access required.', 'error'); return; }
       const title = document.getElementById('eventFormTitle').value.trim();
       const startDate = document.getElementById('eventFormStartDate').value;
       const endDate = document.getElementById('eventFormEndDate').value;
@@ -4036,6 +4105,7 @@
     }
 
     function deleteEvent(id) {
+      if (!isAdmin()) { showToast('Admin access required.', 'error'); return; }
       const ev = events.find(x => x.id === id);
       if (!confirm('Delete event "' + ev.title + '"?')) return;
       events = events.filter(x => x.id !== id);
@@ -4076,8 +4146,8 @@
           <td>
             <div class="action-btns">
               <button class="action-btn" onclick="downloadForm(${f.id})" title="Download"><i class="fas fa-download"></i></button>
-              <button class="action-btn" onclick="editForm(${f.id})" title="Edit"><i class="fas fa-pen"></i></button>
-              <button class="action-btn delete" onclick="deleteForm(${f.id})" title="Delete"><i class="fas fa-trash"></i></button>
+              ${isAdmin() ? `<button class="action-btn" onclick="editForm(${f.id})" title="Edit"><i class="fas fa-pen"></i></button>` : ''}
+              ${isAdmin() ? `<button class="action-btn delete" onclick="deleteForm(${f.id})" title="Delete"><i class="fas fa-trash"></i></button>` : ''}
             </div>
           </td>
         `;
@@ -4106,6 +4176,7 @@
     }
 
     function openFormModal() {
+      if (!isAdmin()) { showToast('Admin access required.', 'error'); return; }
       editingFormId = null;
       document.getElementById('formModalTitle').textContent = 'Upload Form';
       document.getElementById('docFormTitle').value = '';
@@ -4124,6 +4195,7 @@
     }
 
     function editForm(id) {
+      if (!isAdmin()) { showToast('Admin access required.', 'error'); return; }
       const f = forms.find(x => x.id === id);
       if (!f) return;
       editingFormId = id;
@@ -4145,6 +4217,7 @@
     }
 
     function saveForm() {
+      if (!isAdmin()) { showToast('Admin access required.', 'error'); return; }
       const title = document.getElementById('docFormTitle').value.trim();
       if (!title) { showToast('Please enter a form title', 'error'); return; }
 
@@ -4202,6 +4275,7 @@
     }
 
     function deleteForm(id) {
+      if (!isAdmin()) { showToast('Admin access required.', 'error'); return; }
       const f = forms.find(x => x.id === id);
       if (!confirm('Delete form "' + f.title + '"?')) return;
       forms = forms.filter(x => x.id !== id);
@@ -4256,8 +4330,8 @@
           <td>
             <div class="action-btns">
               <button class="action-btn" onclick="downloadReport(${r.id})" title="Download"><i class="fas fa-download"></i></button>
-              <button class="action-btn" onclick="editReport(${r.id})" title="Edit"><i class="fas fa-pen"></i></button>
-              <button class="action-btn delete" onclick="deleteReport(${r.id})" title="Delete"><i class="fas fa-trash"></i></button>
+              ${isAdmin() ? `<button class="action-btn" onclick="editReport(${r.id})" title="Edit"><i class="fas fa-pen"></i></button>` : ''}
+              ${isAdmin() ? `<button class="action-btn delete" onclick="deleteReport(${r.id})" title="Delete"><i class="fas fa-trash"></i></button>` : ''}
             </div>
           </td>
         `;
@@ -4286,6 +4360,7 @@
     }
 
     function openReportModal() {
+      if (!isAdmin()) { showToast('Admin access required.', 'error'); return; }
       editingReportId = null;
       document.getElementById('reportModalTitle').textContent = 'Upload Report';
       document.getElementById('reportFormTitle').value = '';
@@ -4304,6 +4379,7 @@
     }
 
     function editReport(id) {
+      if (!isAdmin()) { showToast('Admin access required.', 'error'); return; }
       const r = reports.find(x => x.id === id);
       if (!r) return;
       editingReportId = id;
@@ -4325,6 +4401,7 @@
     }
 
     function saveReport() {
+      if (!isAdmin()) { showToast('Admin access required.', 'error'); return; }
       const title = document.getElementById('reportFormTitle').value.trim();
       if (!title) { showToast('Please enter a report title', 'error'); return; }
 
@@ -4382,6 +4459,7 @@
     }
 
     function deleteReport(id) {
+      if (!isAdmin()) { showToast('Admin access required.', 'error'); return; }
       const r = reports.find(x => x.id === id);
       if (!confirm('Delete report "' + r.title + '"?')) return;
       reports = reports.filter(x => x.id !== id);
@@ -4507,6 +4585,7 @@
     }
 
     function deleteMessageFromModal() {
+      if (!isAdmin()) { showToast('Admin access required.', 'error'); return; }
       if (viewingMessageId) {
         deleteMessage(viewingMessageId);
         closeMessageModal();
@@ -4523,6 +4602,7 @@
     }
 
     function openComposeModal() {
+      if (!isAdmin()) { showToast('Admin access required.', 'error'); return; }
       document.getElementById('composeTo').value = 'All';
       document.getElementById('composeType').selectedIndex = 0;
       document.getElementById('composeSubject').value = '';
@@ -4547,6 +4627,7 @@
     }
 
     function sendMessage() {
+      if (!isAdmin()) { showToast('Admin access required.', 'error'); return; }
       const to = document.getElementById('composeTo').value;
       const type = document.getElementById('composeType').value;
       const subject = document.getElementById('composeSubject').value.trim();
